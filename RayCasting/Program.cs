@@ -7,61 +7,36 @@ namespace RayCasting
     {
         static void Main(string[] args)
         {
-            if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO) < 0)
+            Window.Window window = new Window.Window(1020, 800);
+
+            window.Launch();
+
+            bool c = true;
+            while (c)
             {
-                Console.WriteLine("Unable to initialize SDL. Error: {0}", SDL.SDL_GetError());
-                return;
-            }
-            
-            SDL.SDL_Init(SDL.SDL_INIT_VIDEO);
-
-            var window = IntPtr.Zero;
-
-            window = SDL.SDL_CreateWindow(
-                "Title",
-                SDL.SDL_WINDOWPOS_CENTERED,
-                SDL.SDL_WINDOWPOS_CENTERED,
-                1020,
-                800,
-                SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE
-            );
-
-            if (window == IntPtr.Zero)
-            {
-                Console.WriteLine("Unable to create a window. Error: {0}", SDL.SDL_GetError());
-                return;
-            }
-
-            SDL.SDL_Event e;
-
-            bool quit = false;
-
-            while (!quit)
-            {
-                while (SDL.SDL_PollEvent(out e) != 0)
+                while (window.GetEvent())
                 {
-                    switch (e.type)
+                    switch (window.e.type)
                     {
                         case SDL.SDL_EventType.SDL_KEYDOWN:
-                            switch (e.key.keysym.sym)
+                            switch (window.e.key.keysym.sym)
                             {
                                 case SDL.SDL_Keycode.SDLK_q:
-                                    quit = true;
+                                    c = false;
                                     break;
                             }
                             
                             break;
                         
                         case SDL.SDL_EventType.SDL_QUIT:
-                            quit = true;
+                            c = false;
                             break;
                     }
+                    
                 }
             }
             
-            SDL.SDL_DestroyWindow(window);
-            
-            SDL.SDL_Quit();
+            window.Quit();
         }
     }
 }
